@@ -1,8 +1,15 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useReducer } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 
-import { getSeedTasksForFirstLaunch } from '@/services/seedService';
-import { getTasks, saveTasks } from '@/services/taskStorage';
-import { Task } from '@/types/task';
+import { getSeedTasksForFirstLaunch } from "@/services/seedService";
+import { getTasks, saveTasks } from "@/services/taskStorage";
+import { Task } from "@/types/task";
 
 type TaskState = {
   tasks: Task[];
@@ -10,14 +17,16 @@ type TaskState = {
 };
 
 type TaskAction =
-  | { type: 'SET_TASKS'; payload: Task[] }
-  | { type: 'ADD_TASK'; payload: Task }
-  | { type: 'TOGGLE_TASK'; payload: string }
-  | { type: 'DELETE_TASK'; payload: string };
+  | { type: "SET_TASKS"; payload: Task[] }
+  | { type: "ADD_TASK"; payload: Task }
+  | { type: "UPDATE_TASK"; payload: Task }
+  | { type: "TOGGLE_TASK"; payload: string }
+  | { type: "DELETE_TASK"; payload: string };
 
 type TaskContextValue = TaskState & {
   setTasks: (tasks: Task[]) => void;
   addTask: (task: Task) => void;
+  updateTask: (task: Task) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
   getTaskById: (taskId: string) => Task | undefined;
@@ -32,18 +41,27 @@ const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 function taskReducer(state: TaskState, action: TaskAction): TaskState {
   switch (action.type) {
-    case 'SET_TASKS':
+    case "SET_TASKS":
       return { tasks: action.payload, isReady: true };
-    case 'ADD_TASK':
+    case "ADD_TASK":
       return { ...state, tasks: [action.payload, ...state.tasks] };
-    case 'TOGGLE_TASK':
+    case "UPDATE_TASK":
       return {
         ...state,
         tasks: state.tasks.map((task) =>
-          task.id === action.payload ? { ...task, completed: !task.completed } : task,
+          task.id === action.payload.id ? action.payload : task,
         ),
       };
-    case 'DELETE_TASK':
+    case "TOGGLE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.map((task) =>
+          task.id === action.payload
+            ? { ...task, completed: !task.completed }
+            : task,
+        ),
+      };
+    case "DELETE_TASK":
       return {
         ...state,
         tasks: state.tasks.filter((task) => task.id !== action.payload),
@@ -65,17 +83,18 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
     async function hydrateTasks() {
       const storedTasks = await getTasks();
-      const seedTasks = storedTasks.length === 0 ? await getSeedTasksForFirstLaunch() : null;
+      const seedTasks =
+        storedTasks.length === 0 ? await getSeedTasksForFirstLaunch() : null;
       const initialTasks = seedTasks ?? storedTasks;
 
       if (isMounted) {
-        dispatch({ type: 'SET_TASKS', payload: initialTasks });
+        dispatch({ type: "SET_TASKS", payload: initialTasks });
       }
     }
 
     hydrateTasks().catch(() => {
       if (isMounted) {
-        dispatch({ type: 'SET_TASKS', payload: [] });
+        dispatch({ type: "SET_TASKS", payload: [] });
       }
     });
 
@@ -93,10 +112,13 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const value = useMemo<TaskContextValue>(
     () => ({
       ...state,
-      setTasks: (tasks) => dispatch({ type: 'SET_TASKS', payload: tasks }),
-      addTask: (task) => dispatch({ type: 'ADD_TASK', payload: task }),
-      toggleTask: (taskId) => dispatch({ type: 'TOGGLE_TASK', payload: taskId }),
-      deleteTask: (taskId) => dispatch({ type: 'DELETE_TASK', payload: taskId }),
+      setTasks: (tasks) => dispatch({ type: "SET_TASKS", payload: tasks }),
+      addTask: (task) => dispatch({ type: "ADD_TASK", payload: task }),
+      updateTask: (task) => dispatch({ type: "UPDATE_TASK", payload: task }),
+      toggleTask: (taskId) =>
+        dispatch({ type: "TOGGLE_TASK", payload: taskId }),
+      deleteTask: (taskId) =>
+        dispatch({ type: "DELETE_TASK", payload: taskId }),
       getTaskById: (taskId) => state.tasks.find((task) => task.id === taskId),
     }),
     [state],
@@ -109,7 +131,7 @@ export function useTasks() {
   const context = useContext(TaskContext);
 
   if (!context) {
-    throw new Error('useTasks must be used within a TaskProvider');
+    throw new Error("useTasks must be used within a TaskProvider");
   }
 
   return context;

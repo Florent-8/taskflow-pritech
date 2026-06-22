@@ -39,8 +39,8 @@ TaskFlow is a React Native (Expo) app for managing personal tasks with local per
 
 - Task list: `TaskListScreen` renders tasks with `FlatList`, newest first.
 - Task rows: `TaskListItem` shows title, created date, completion toggle, details navigation, and delete action.
-- Add task: `AddTaskScreen` validates title and description inline before creating a task.
-- Task details: `TaskDetailsScreen` shows the full task, formatted date, status, toggle action, and confirmation-protected delete.
+- Add and edit task: `AddTaskScreen` validates title and description inline, creates tasks, and edits existing tasks from details.
+- Task details: `TaskDetailsScreen` shows the full task, formatted date, status, edit action, toggle action, and confirmation-protected delete.
 - Local persistence: all task changes are saved through `services/taskStorage.ts` using AsyncStorage.
 - First-launch seed data: `services/seedService.ts` fetches five JSONPlaceholder todos once, maps them into TaskFlow tasks, then records a seeded flag.
 - Offline behavior: if the seed request fails, the app starts with an empty list and continues to work locally.
@@ -69,11 +69,11 @@ src/
   utils/        Date formatting, validation, and UUID helper
 ```
 
-## Known Limitations / What I Would Improve With More Time
+## Future Improvements
 
-- No automated tests are included; I would add reducer, validation, and storage tests first.
-- There is no edit-task screen yet; users can create, toggle, and delete tasks.
-- The first-launch import is intentionally small and simple; a production app would add richer retry and sync behavior.
+- Add automated tests for the reducer, validation, and storage layer.
+- Improve the first-launch import with richer retry and sync handling.
+- Add a more advanced task workflow, such as due dates, priorities, or reminders.
 
 ## Screenshots / Screen Recording
 
