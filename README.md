@@ -2,6 +2,15 @@
 
 TaskFlow is a React Native (Expo) app for managing personal tasks with local persistence, navigation, search, filters, and first-launch demo data.
 
+## What I Built
+
+TaskFlow is a compact, production-style task manager focused on the core flows that matter in a real app: create, edit, complete, search, filter, and delete tasks with local persistence.
+
+- Fast task workflow: add tasks, edit them from details, and toggle completion without leaving the app flow.
+- Local-first storage: tasks persist through AsyncStorage, so the app keeps working offline after the first launch.
+- Smart list view: search and status filters make it easy to find the right task quickly.
+- Clean navigation: a native stack connects the list, details, and edit screens with a simple, review-friendly structure.
+
 ## Setup
 
 1. Install dependencies:
@@ -35,7 +44,7 @@ TaskFlow is a React Native (Expo) app for managing personal tasks with local per
 
    Pressing `a` requires Android Studio, the Android SDK, and `adb` installed locally. If those are not installed, scan the QR code with Expo Go instead.
 
-## What Was Implemented
+## Core Features
 
 - Task list: `TaskListScreen` renders tasks with `FlatList`, newest first.
 - Task rows: `TaskListItem` shows title, created date, completion toggle, details navigation, and delete action.
