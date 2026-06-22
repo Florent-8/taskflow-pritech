@@ -78,7 +78,7 @@ TaskFlow is a compact, production-style task manager focused on the core flows t
 | Local task storage              | Done   | AsyncStorage persists tasks on device.                     |
 | Simple navigation               | Done   | Native stack between list, add/edit, and details.          |
 
-Extra improvement: edit-task support from the details screen.
+**Extra improvement:** edit-task support from the details screen.
 
 ## Architecture Decisions
 
