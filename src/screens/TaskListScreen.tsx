@@ -1,13 +1,16 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { EmptyState } from '@/components/EmptyState';
+import { FilterBar } from '@/components/FilterBar';
+import { SearchBar } from '@/components/SearchBar';
 import { TaskListItem } from '@/components/TaskListItem';
 import { useTasks } from '@/context/TaskContext';
 import { RootStackParamList } from '@/navigation/types';
 import { colors, radii, spacing, typography } from '@/theme';
-import { Task } from '@/types/task';
+import { Task, TaskFilter } from '@/types/task';
 
 type TaskListNavigation = NativeStackNavigationProp<RootStackParamList, 'TaskList'>;
 
@@ -20,7 +23,21 @@ function sortNewestFirst(tasks: Task[]): Task[] {
 export function TaskListScreen() {
   const navigation = useNavigation<TaskListNavigation>();
   const { tasks, isReady, toggleTask, deleteTask } = useTasks();
-  const sortedTasks = sortNewestFirst(tasks);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState<TaskFilter>('all');
+  const visibleTasks = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return sortNewestFirst(tasks).filter((task) => {
+      const matchesSearch = task.title.toLowerCase().includes(normalizedQuery);
+      const matchesFilter =
+        filter === 'all' ||
+        (filter === 'completed' && task.completed) ||
+        (filter === 'active' && !task.completed);
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [filter, searchQuery, tasks]);
 
   const confirmDelete = (task: Task) => {
     Alert.alert('Delete task?', `"${task.title}" will be removed.`, [
@@ -36,16 +53,21 @@ export function TaskListScreen() {
         <Text style={styles.subheading}>Keep personal tasks moving.</Text>
       </View>
 
+      <View style={styles.controls}>
+        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+        <FilterBar value={filter} onChange={setFilter} />
+      </View>
+
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={sortedTasks}
+        data={visibleTasks}
         keyExtractor={(task) => task.id}
         ListEmptyComponent={
           <EmptyState
-            title={isReady ? 'No tasks yet' : 'Loading tasks'}
+            title={isReady ? 'No matching tasks' : 'Loading tasks'}
             message={
               isReady
-                ? 'Add your first task and it will show up here.'
+                ? 'Try a different search or filter, or add something new.'
                 : 'Your saved tasks are being prepared.'
             }
           />
@@ -73,6 +95,11 @@ export function TaskListScreen() {
 }
 
 const styles = StyleSheet.create({
+  controls: {
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+  },
   fab: {
     alignItems: 'center',
     backgroundColor: colors.primary,
