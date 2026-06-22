@@ -58,25 +58,27 @@ TaskFlow is a compact, production-style task manager focused on the core flows t
 - Navigation: React Navigation native stack connects list, add, and details screens.
 - Shared UI foundation: `theme.ts` centralizes color, spacing, radius, and typography constants.
 
-## Assignment Checklist
+## Assignment Coverage
 
-- Task list screen: implemented.
-- Add new task: implemented.
-- Mark task as completed / not completed: implemented.
-- Delete task: implemented.
-- Simple task details view: implemented.
-- Basic input validation: implemented.
-- Clean and simple UI: implemented.
-- Fetch data from a public API: implemented with JSONPlaceholder seed data.
-- Use functional components and hooks: implemented throughout the app.
-- Use reusable components: implemented with shared UI components.
-- Handle empty states: implemented.
-- Search tasks by title: implemented.
-- Filter tasks by status: implemented.
-- Store tasks locally on the device: implemented with AsyncStorage.
-- Add simple navigation between screens: implemented.
+| Requirement                     | Status | Notes                                                      |
+| ------------------------------- | ------ | ---------------------------------------------------------- |
+| Task list screen                | Done   | Newest tasks first with empty-state handling.              |
+| Add new task                    | Done   | Inline validation before saving.                           |
+| Mark task complete / incomplete | Done   | Toggle from list or details.                               |
+| Delete task                     | Done   | Confirmation-protected deletion.                           |
+| Simple task details view        | Done   | Shows title, description, date, and status.                |
+| Basic input validation          | Done   | Title and description are validated.                       |
+| Clean and simple UI             | Done   | Reusable components and a shared theme keep it consistent. |
+| Fetch data from a public API    | Done   | JSONPlaceholder seeds the first launch.                    |
+| Functional components and hooks | Done   | Used throughout the app.                                   |
+| Reusable components             | Done   | Task rows, search, filter, and empty state are shared.     |
+| Empty states                    | Done   | List and missing-task states are handled.                  |
+| Search by title                 | Done   | Live search in the task list.                              |
+| Filter by status                | Done   | All, completed, and active views.                          |
+| Local task storage              | Done   | AsyncStorage persists tasks on device.                     |
+| Simple navigation               | Done   | Native stack between list, add/edit, and details.          |
 
-This covers the full brief and the bonus items, with one extra improvement: edit-task support from the details screen.
+Extra improvement: edit-task support from the details screen.
 
 ## Architecture Decisions
 
