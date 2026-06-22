@@ -1,10 +1,15 @@
+import 'react-native-gesture-handler';
+
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+
+import { TaskProvider } from '@/context/TaskContext';
+import { AppNavigator } from '@/navigation/AppNavigator';
 
 export default function App() {
   return (
-    <View>
+    <TaskProvider>
+      <AppNavigator />
       <StatusBar style="auto" />
-    </View>
+    </TaskProvider>
   );
 }

@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useContext, useMemo, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useMemo, useReducer } from 'react';
 
+import { getSeedTasksForFirstLaunch } from '@/services/seedService';
+import { getTasks, saveTasks } from '@/services/taskStorage';
 import { Task } from '@/types/task';
 
 type TaskState = {
@@ -57,6 +59,36 @@ type TaskProviderProps = {
 
 export function TaskProvider({ children }: TaskProviderProps) {
   const [state, dispatch] = useReducer(taskReducer, initialState);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function hydrateTasks() {
+      const storedTasks = await getTasks();
+      const seedTasks = storedTasks.length === 0 ? await getSeedTasksForFirstLaunch() : null;
+      const initialTasks = seedTasks ?? storedTasks;
+
+      if (isMounted) {
+        dispatch({ type: 'SET_TASKS', payload: initialTasks });
+      }
+    }
+
+    hydrateTasks().catch(() => {
+      if (isMounted) {
+        dispatch({ type: 'SET_TASKS', payload: [] });
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (state.isReady) {
+      saveTasks(state.tasks).catch(() => undefined);
+    }
+  }, [state.isReady, state.tasks]);
 
   const value = useMemo<TaskContextValue>(
     () => ({
