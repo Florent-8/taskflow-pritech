@@ -50,7 +50,7 @@ export function TaskListScreen() {
     <View style={styles.screen}>
       <View style={styles.header}>
         <Text style={styles.heading}>TaskFlow</Text>
-        <Text style={styles.subheading}>Keep personal tasks moving.</Text>
+        <Text style={styles.subheading}>{tasks.length} task{tasks.length === 1 ? '' : 's'} saved</Text>
       </View>
 
       <View style={styles.controls}>
@@ -67,7 +67,9 @@ export function TaskListScreen() {
             title={isReady ? 'No matching tasks' : 'Loading tasks'}
             message={
               isReady
-                ? 'Try a different search or filter, or add something new.'
+                ? tasks.length === 0
+                  ? 'Add your first task and it will show up here.'
+                  : 'Try a different search or filter, or add something new.'
                 : 'Your saved tasks are being prepared.'
             }
           />

@@ -13,7 +13,10 @@ type TaskListItemProps = {
 
 export function TaskListItem({ task, onPress, onToggle, onDelete }: TaskListItemProps) {
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable
+      style={({ pressed }) => [styles.container, pressed && styles.containerPressed]}
+      onPress={onPress}
+    >
       <Pressable
         accessibilityLabel={task.completed ? 'Mark task active' : 'Mark task complete'}
         accessibilityRole="checkbox"
@@ -35,7 +38,7 @@ export function TaskListItem({ task, onPress, onToggle, onDelete }: TaskListItem
         accessibilityLabel={`Delete ${task.title}`}
         accessibilityRole="button"
         hitSlop={spacing.sm}
-        style={styles.deleteButton}
+        style={({ pressed }) => [styles.deleteButton, pressed && styles.deleteButtonPressed]}
         onPress={onDelete}
       >
         <Text style={styles.deleteButtonText}>×</Text>
@@ -56,6 +59,9 @@ const styles = StyleSheet.create({
     minHeight: 74,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
+  },
+  containerPressed: {
+    backgroundColor: colors.surfacePressed,
   },
   checkbox: {
     alignItems: 'center',
@@ -92,6 +98,9 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     width: 36,
+  },
+  deleteButtonPressed: {
+    backgroundColor: colors.dangerSoft,
   },
   deleteButtonText: {
     color: colors.danger,
