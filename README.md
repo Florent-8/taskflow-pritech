@@ -29,7 +29,6 @@ TaskFlow is a React Native (Expo) app for managing personal tasks with local per
    ```
 
 3. Run the app:
-
    - iOS: press `i` in the Expo terminal, or scan the QR code with Expo Go on iOS.
    - Android: press `a` in the Expo terminal, or scan the QR code with Expo Go on Android.
    - Web: press `w` in the Expo terminal.
@@ -78,8 +77,20 @@ src/
 
 ## Screenshots / Screen Recording
 
-Drop screenshots or a short screen recording in a `docs/` folder and link them here:
+The screenshots are stored in `docs/` and embedded here for quick preview.
 
-- Task list:
-- Add task:
-- Task details:
+| Task list                             | Add task                             |
+| ------------------------------------- | ------------------------------------ |
+| ![Task list screen](docs/image1.jpeg) | ![Add task screen](docs/image2.jpeg) |
+
+| Task list, completed view                | Task list, alternate state               |
+| ---------------------------------------- | ---------------------------------------- |
+| ![Task list completed](docs/image3.jpeg) | ![Task list alternate](docs/image4.jpeg) |
+
+| Task list variant                      | Task list variant 2                      |
+| -------------------------------------- | ---------------------------------------- |
+| ![Task list variant](docs/image5.jpeg) | ![Task list variant 2](docs/image6.jpeg) |
+
+| Task list final state                      |
+| ------------------------------------------ |
+| ![Task list final state](docs/image7.jpeg) |
