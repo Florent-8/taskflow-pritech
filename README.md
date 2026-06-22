@@ -79,18 +79,33 @@ src/
 
 The screenshots are stored in `docs/` and embedded here for quick preview.
 
-| Task list                             | Add task                             |
-| ------------------------------------- | ------------------------------------ |
-| ![Task list screen](docs/image1.jpeg) | ![Add task screen](docs/image2.jpeg) |
+<table>
+   <tr>
+      <td align="center">
+         <img src="docs/image1.jpeg" alt="Task list screen" width="260" />
+      </td>
+      <td align="center">
+         <img src="docs/image2.jpeg" alt="Add task screen" width="260" />
+      </td>
+   </tr>
+   <tr>
+      <td align="center">
+         <img src="docs/image3.jpeg" alt="Task list completed" width="260" />
+      </td>
+      <td align="center">
+         <img src="docs/image4.jpeg" alt="Task list alternate" width="260" />
+      </td>
+   </tr>
+   <tr>
+      <td align="center">
+         <img src="docs/image5.jpeg" alt="Task list variant" width="260" />
+      </td>
+      <td align="center">
+         <img src="docs/image6.jpeg" alt="Task list variant 2" width="260" />
+      </td>
+   </tr>
+</table>
 
-| Task list, completed view                | Task list, alternate state               |
-| ---------------------------------------- | ---------------------------------------- |
-| ![Task list completed](docs/image3.jpeg) | ![Task list alternate](docs/image4.jpeg) |
-
-| Task list variant                      | Task list variant 2                      |
-| -------------------------------------- | ---------------------------------------- |
-| ![Task list variant](docs/image5.jpeg) | ![Task list variant 2](docs/image6.jpeg) |
-
-| Task list final state                      |
-| ------------------------------------------ |
-| ![Task list final state](docs/image7.jpeg) |
+<p align="center">
+   <img src="docs/image7.jpeg" alt="Task list final state" width="320" />
+</p>
