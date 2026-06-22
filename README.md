@@ -22,6 +22,12 @@ TaskFlow is a React Native (Expo) app for managing personal tasks with local per
    npm run start:tunnel
    ```
 
+   For iOS Expo Go connection issues, especially if the phone says the app is taking too long, clear Metro's cache while using the tunnel:
+
+   ```bash
+   npm run start:tunnel:clear
+   ```
+
 3. Run the app:
 
    - iOS: press `i` in the Expo terminal, or scan the QR code with Expo Go on iOS.
