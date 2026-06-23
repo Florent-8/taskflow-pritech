@@ -1,48 +1,73 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
-import { useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { useMemo, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-import { EmptyState } from '@/components/EmptyState';
-import { FilterBar } from '@/components/FilterBar';
-import { SearchBar } from '@/components/SearchBar';
-import { TaskListItem } from '@/components/TaskListItem';
-import { useTasks } from '@/context/TaskContext';
-import { RootStackParamList } from '@/navigation/types';
-import { colors, radii, spacing, typography } from '@/theme';
-import { Task, TaskFilter } from '@/types/task';
+import { EmptyState } from "@/components/EmptyState";
+import { FilterBar } from "@/components/FilterBar";
+import { SearchBar } from "@/components/SearchBar";
+import { TaskListItem } from "@/components/TaskListItem";
+import { useTasks } from "@/context/TaskContext";
+import { RootStackParamList } from "@/navigation/types";
+import { colors, radii, spacing, typography } from "@/theme";
+import { Task, TaskFilter } from "@/types/task";
 
-type TaskListNavigation = NativeStackNavigationProp<RootStackParamList, 'TaskList'>;
+type TaskListNavigation = NativeStackNavigationProp<
+  RootStackParamList,
+  "TaskList"
+>;
 
 function sortNewestFirst(tasks: Task[]): Task[] {
   return [...tasks].sort(
-    (first, second) => new Date(second.createdAt).getTime() - new Date(first.createdAt).getTime(),
+    (first, second) =>
+      new Date(second.createdAt).getTime() -
+      new Date(first.createdAt).getTime(),
   );
 }
 
 export function TaskListScreen() {
   const navigation = useNavigation<TaskListNavigation>();
   const { tasks, isReady, toggleTask, deleteTask } = useTasks();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState<TaskFilter>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState<TaskFilter>("all");
   const visibleTasks = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
     return sortNewestFirst(tasks).filter((task) => {
       const matchesSearch = task.title.toLowerCase().includes(normalizedQuery);
       const matchesFilter =
-        filter === 'all' ||
-        (filter === 'completed' && task.completed) ||
-        (filter === 'active' && !task.completed);
+        filter === "all" ||
+        (filter === "completed" && task.completed) ||
+        (filter === "active" && !task.completed);
 
       return matchesSearch && matchesFilter;
     });
   }, [filter, searchQuery, tasks]);
 
   const confirmDelete = (task: Task) => {
-    Alert.alert('Delete task?', `"${task.title}" will be removed.`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: () => deleteTask(task.id) },
+    const handleDelete = () => deleteTask(task.id);
+
+    if (Platform.OS === "web") {
+      const shouldDelete = window.confirm(`Delete "${task.title}"?`);
+
+      if (shouldDelete) {
+        handleDelete();
+      }
+
+      return;
+    }
+
+    Alert.alert("Delete task?", `"${task.title}" will be removed.`, [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: handleDelete },
     ]);
   };
 
@@ -50,7 +75,9 @@ export function TaskListScreen() {
     <View style={styles.screen}>
       <View style={styles.header}>
         <Text style={styles.heading}>TaskFlow</Text>
-        <Text style={styles.subheading}>{tasks.length} task{tasks.length === 1 ? '' : 's'} saved</Text>
+        <Text style={styles.subheading}>
+          {tasks.length} task{tasks.length === 1 ? "" : "s"} saved
+        </Text>
       </View>
 
       <View style={styles.controls}>
@@ -64,13 +91,13 @@ export function TaskListScreen() {
         keyExtractor={(task) => task.id}
         ListEmptyComponent={
           <EmptyState
-            title={isReady ? 'No matching tasks' : 'Loading tasks'}
+            title={isReady ? "No matching tasks" : "Loading tasks"}
             message={
               isReady
                 ? tasks.length === 0
-                  ? 'Add your first task and it will show up here.'
-                  : 'Try a different search or filter, or add something new.'
-                : 'Your saved tasks are being prepared.'
+                  ? "Add your first task and it will show up here."
+                  : "Try a different search or filter, or add something new."
+                : "Your saved tasks are being prepared."
             }
           />
         }
@@ -78,7 +105,9 @@ export function TaskListScreen() {
           <TaskListItem
             task={item}
             onDelete={() => confirmDelete(item)}
-            onPress={() => navigation.navigate('TaskDetails', { taskId: item.id })}
+            onPress={() =>
+              navigation.navigate("TaskDetails", { taskId: item.id })
+            }
             onToggle={() => toggleTask(item.id)}
           />
         )}
@@ -88,7 +117,7 @@ export function TaskListScreen() {
         accessibilityLabel="Add task"
         accessibilityRole="button"
         style={styles.fab}
-        onPress={() => navigation.navigate('AddTask')}
+        onPress={() => navigation.navigate("AddTask")}
       >
         <Text style={styles.fabText}>+</Text>
       </Pressable>
@@ -103,14 +132,14 @@ const styles = StyleSheet.create({
     paddingTop: spacing.lg,
   },
   fab: {
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.primary,
     borderRadius: radii.round,
     bottom: spacing.xl,
     elevation: 4,
     height: 58,
-    justifyContent: 'center',
-    position: 'absolute',
+    justifyContent: "center",
+    position: "absolute",
     right: spacing.xl,
     shadowColor: colors.text,
     shadowOffset: { height: 6, width: 0 },
@@ -131,7 +160,7 @@ const styles = StyleSheet.create({
   heading: {
     color: colors.text,
     fontSize: typography.title,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   listContent: {
     gap: spacing.md,

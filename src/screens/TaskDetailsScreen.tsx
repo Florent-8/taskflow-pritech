@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
   Alert,
   Pressable,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -39,15 +40,27 @@ export function TaskDetailsScreen() {
   }
 
   const confirmDelete = () => {
+    const handleDelete = () => {
+      deleteTask(task.id);
+      navigation.goBack();
+    };
+
+    if (Platform.OS === "web") {
+      const shouldDelete = window.confirm(`Delete "${task.title}"?`);
+
+      if (shouldDelete) {
+        handleDelete();
+      }
+
+      return;
+    }
+
     Alert.alert("Delete task?", `"${task.title}" will be removed.`, [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => {
-          deleteTask(task.id);
-          navigation.goBack();
-        },
+        onPress: handleDelete,
       },
     ]);
   };
